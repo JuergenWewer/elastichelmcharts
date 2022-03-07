@@ -4,8 +4,8 @@
       kubernetes.core.helm:
         name: logstash
         namespace: kube-system
-        chart_ref: $HOME/workspace/helm-charts/logstash
+        chart_ref: $HOME/workspace/elastichelmcharts/logstash
         kubeconfig_path: "{{ kubeconfig }}"
         create_namespace: True
         wait: true
-        values_files: $HOME/workspace/helm-charts/logstash/examples/elasticsearch/values.yaml
+        values_files: $HOME/workspace/elastichelmcharts/logstash/examples/elasticsearch/values.yaml

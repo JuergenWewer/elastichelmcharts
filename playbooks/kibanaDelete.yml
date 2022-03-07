@@ -5,6 +5,6 @@
         name: kibana
         state: absent
         namespace: kube-system
-        chart_ref: $HOME/workspace/helm-charts/kibana
+        chart_ref: $HOME/workspace/elastichelmcharts/kibana
         kubeconfig_path: "{{ kubeconfig }}"
         wait: true
