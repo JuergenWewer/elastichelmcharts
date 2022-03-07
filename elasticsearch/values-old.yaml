@@ -21,19 +21,22 @@ roles:
   - remote_cluster_client
   - transform
 
-replicas: 3
+replicas: 2
 minimumMasterNodes: 2
 
 esMajorVersion: ""
 
 # Allows you to add any config files in /usr/share/elasticsearch/config/
 # such as elasticsearch.yml and log4j2.properties
-esConfig: {}
+#esConfig: {}
 #  elasticsearch.yml: |
 #    key:
 #      nestedkey: value
 #  log4j2.properties: |
 #    key = value
+esConfig:
+  elasticsearch.yml: |
+    xpack.security.enabled: false
 
 createCert: true
 
@@ -44,9 +47,15 @@ esJvmOptions: {}
 # Extra environment variables to append to this nodeGroup
 # This will be appended to the current 'env:' key. You can use any of the kubernetes env
 # syntax here
-extraEnvs: []
+#extraEnvs: []
 #  - name: MY_ENVIRONMENT_VAR
 #    value: the_value_goes_here
+extraEnvs:
+  - name: ELASTIC_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: elastic-config-credentials
+        key: password
 
 # Allows you to load environment variables from kubernetes secret or config map
 envFrom: []
@@ -57,7 +66,7 @@ envFrom: []
 
 # Disable it to use your own elastic-credential Secret.
 secret:
-  enabled: true
+  enabled: false
   password: "" # generated randomly if not defined
 
 # A list of secrets and their paths to mount inside the pod
@@ -85,15 +94,15 @@ podAnnotations: {}
 # additionals labels
 labels: {}
 
-esJavaOpts: "" # example: "-Xmx1g -Xms1g"
+esJavaOpts: "-Xms1024m -Xmx1024m" # example: "-Xmx1g -Xms1g"
 
 resources:
   requests:
-    cpu: "1000m"
-    memory: "2Gi"
+    cpu: "500m"
+    memory: "1Gi"
   limits:
-    cpu: "1000m"
-    memory: "2Gi"
+    cpu: "500m"
+    memory: "1Gi"
 
 initResources: {}
 # limits:
@@ -106,10 +115,11 @@ initResources: {}
 networkHost: "0.0.0.0"
 
 volumeClaimTemplate:
-  accessModes: ["ReadWriteOnce"]
+  accessModes: [ "ReadWriteOnce" ]
+  storageClassName: "managed-nfs-raid-storage"
   resources:
     requests:
-      storage: 30Gi
+      storage: 5Gi
 
 rbac:
   create: false
@@ -187,7 +197,7 @@ podManagementPolicy: "Parallel"
 # If you experience slow pod startups you probably want to set this to `false`.
 enableServiceLinks: true
 
-protocol: https
+protocol: http
 httpPort: 9200
 transportPort: 9300
 
