@@ -72,7 +72,7 @@ hostAliases: []
 #  - "bar.local"
 
 image: "docker.elastic.co/logstash/logstash"
-imageTag: "8.0.0-SNAPSHOT"
+imageTag: "8.0.0"
 imagePullPolicy: "IfNotPresent"
 imagePullSecrets: []
 
@@ -96,6 +96,7 @@ volumeClaimTemplate:
   resources:
     requests:
       storage: 1Gi
+  storageClassName: managed-nfs-raid-storage
 
 rbac:
   create: false

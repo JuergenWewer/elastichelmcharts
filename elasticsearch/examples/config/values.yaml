@@ -1,5 +1,5 @@
 ---
-clusterName: "config"
+clusterName: "elasticsearch"
 replicas: 1
 
 extraEnvs:

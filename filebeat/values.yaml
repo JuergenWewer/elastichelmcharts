@@ -11,17 +11,19 @@ daemonset:
   envFrom: []
   # - configMapRef:
   #     name: config-secret
-  extraEnvs:
-    - name: "ELASTICSEARCH_USERNAME"
-      valueFrom:
-        secretKeyRef:
-          name: elasticsearch-master-credentials
-          key: username
-    - name: "ELASTICSEARCH_PASSWORD"
-      valueFrom:
-        secretKeyRef:
-          name: elasticsearch-master-credentials
-          key: password
+
+#  extraEnvs:
+#    - name: "ELASTICSEARCH_USERNAME"
+#      valueFrom:
+#        secretKeyRef:
+#          name: elasticsearch-master-credentials
+#          key: username
+#    - name: "ELASTICSEARCH_PASSWORD"
+#      valueFrom:
+#        secretKeyRef:
+#          name: elasticsearch-master-credentials
+#          key: password
+
   # Allows you to add any config files in /usr/share/filebeat
   extraVolumes: []
   # - name: extras
@@ -39,18 +41,22 @@ daemonset:
       - type: container
         paths:
           - /var/log/containers/*.log
+        exclude_files:
+          - filebeat-.*\.log
+          - logstash-.*\.log
         processors:
         - add_kubernetes_metadata:
             host: ${NODE_NAME}
             matchers:
             - logs_path:
                 logs_path: "/var/log/containers/"
-
-      output.elasticsearch:
-        host: '${NODE_NAME}'
-        hosts: '${ELASTICSEARCH_HOSTS:elasticsearch-master:9200}'
-        username: '${ELASTICSEARCH_USERNAME}'
-        password: '${ELASTICSEARCH_PASSWORD}'
+      output.logstash:
+        hosts: ["logstash-logstash-0.logstash-logstash-headless.kube-system.svc.cluster.local:5044"]
+#      output.elasticsearch:
+#        host: '${NODE_NAME}'
+#        hosts: '${ELASTICSEARCH_HOSTS:elasticsearch-master:9200}'
+#        username: '${ELASTICSEARCH_USERNAME}'
+#        password: '${ELASTICSEARCH_PASSWORD}'
   # Only used when updateStrategy is set to "RollingUpdate"
   maxUnavailable: 1
   nodeSelector: {}
@@ -167,7 +173,7 @@ hostAliases: []
 #  - "foo.local"
 #  - "bar.local"
 image: "docker.elastic.co/beats/filebeat"
-imageTag: "8.0.0-SNAPSHOT"
+imageTag: "8.0.0"
 imagePullPolicy: "IfNotPresent"
 imagePullSecrets: []
 

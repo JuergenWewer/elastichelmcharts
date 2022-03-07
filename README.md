@@ -94,3 +94,47 @@ Kubernetes. There is a dedicated Helm chart for ECK which can be found
 [metricbeat-7]: https://github.com/elastic/helm-charts/tree/7.16/metricbeat/README.md
 [metricbeat-6]: https://github.com/elastic/helm-charts/tree/6.8/metricbeat/README.md
 # elastichelmcharts
+
+export KUBECONFIG=/Users/wewer/.kube/master/etc/kubernetes/admin.conf
+Optimal:
+export KUBECONFIG=/etc/kubernetes/admin.conf
+
+cd elasticsearch/examples/config
+make secrets
+cd ../../..
+-> elastic-config-credentials
+
+cd playbooks
+ansible-playbook -i macpro elasticsearch.yml -v  
+ansible-playbook -i macpro elasticsearchDelete.yml -v
+
+!!!!!! statt dessen:
+helm install elasticsearch ./elasticsearchyuuvis -n kube-system
+zum testen:
+kubectl port-forward svc/elasticsearch-master 9200 -n kube-system
+curl -u yuuvis:optimal http://localhost:9200
+und zum deinstallieren:
+helm uninstall elasticsearch -n kube-system
+
+kubectl port-forward svc/elasticsearch-master 9200 -n kube-system
+curl -u yuuvis:optimal http://localhost:9200/_cat/indices
+
+
+ansible-playbook -i macpro kibana.yml -v    
+ansible-playbook -i macpro kibanaDelete.yml -v
+
+
+kubectl port-forward svc/kibana-kibana 5601 -n kube-system
+http://localhost:5601/
+
+ansible-playbook -i macpro logstash.yml -v    
+ansible-playbook -i macpro logstashDelete.yml -v    
+
+ansible-playbook -i macpro filebeat.yml -v    
+ansible-playbook -i macpro filebeatDelete.yml -v 
+
+
+
+ansible-playbook -i macpro elk.yml -v
+ansible-playbook -i macpro elkDelete.yml -v
+
