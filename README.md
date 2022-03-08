@@ -127,6 +127,17 @@ ansible-playbook -i macpro kibanaDelete.yml -v
 kubectl port-forward svc/kibana-kibana 5601 -n kube-system
 http://localhost:5601/
 
+optimal:
+auf dem windows rechner eine bash shell öffnen
+Achtung: vorher über sftp die conf auf den windows rechner exportieren (siehe k8sansible - README.md)
+testen mittels
+./kubectl.exe cluster-info
+dann im Verzeichnis:
+/home/Administrator/.kube
+./kubectl.exe port-forward svc/kibana-kibana 5601 -n kube-system
+und im Browser:
+http://localhost:5601/
+
 ansible-playbook -i macpro logstash.yml -v    
 ansible-playbook -i macpro logstashDelete.yml -v    
 
