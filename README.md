@@ -150,4 +150,5 @@ ansible-playbook -i macpro elk.yml -v
 ansible-playbook -i optimal elk.yml -v
 
 ansible-playbook -i macpro elkDelete.yml -v
+ansible-playbook -i optimal elkDelete.yml -v 
 
